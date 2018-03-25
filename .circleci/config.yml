@@ -1,0 +1,19 @@
+version: 2
+jobs:
+  build:
+    machine: true
+    steps:
+      - checkout
+      - restore_cache:
+          key: 'v2-bbrady-io-{{ arch }}-{{ .Branch }}'
+      - run: curl -sSL https://get.haskellstack.org/ | sh
+      - run:
+          name: 'Deploy master to Github pages'
+          command: 'STACK_BUILD_OPTS="-j1" ./deploy.sh'
+
+      - save_cache:
+          key: 'v2-bbrady-io-{{ arch }}-{{ .Branch }}-{{ .Revision }}'
+          paths:
+            - '~/.stack'
+            - '~/.ghc'
+
